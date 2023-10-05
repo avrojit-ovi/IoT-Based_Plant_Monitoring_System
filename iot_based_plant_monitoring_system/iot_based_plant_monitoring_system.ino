@@ -5,12 +5,12 @@
 #include <FirebaseESP8266.h>
 
 // Your WiFi credentials
-char ssid[] = "Anonymous ";
-char pass[] = "ovichy147%";
+char ssid[] = "AZIZ WIFI ";
+char pass[] = "998987@joy407";
 
 // Firebase credentials
-#define FIREBASE_HOST "smart-plant-monitoring-feaee-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "CV7K9WfhfWaM3Ug0l7AxlA8GpIN3eLWvXhMBnWWf"
+#define FIREBASE_HOST "iot-botanika-default-rtdb.firebaseio.com"
+#define FIREBASE_AUTH "AIzaSyAPBDFEI2TLTjjwYE9yGqQAL7zpwwszQhc"
 
 DHT dht(D4, DHT11);
 
@@ -54,9 +54,9 @@ void setup() {
   Firebase.reconnectWiFi(true);
 
   // Set online status as "online" in Firebase
-  Firebase.setString(firebaseData, "/OnlineStatus", "online");
-  Firebase.setString(firebaseData, "/WiFi/SSID", currentSSID);
-  Firebase.setString(firebaseData, "/WiFi/Password", currentPass);
+  Firebase.setString(firebaseData, "Data/Other Data/status/OnlineStatus", "online");
+  Firebase.setString(firebaseData, "Data/Other Data/WiFi/SSID", currentSSID);
+  Firebase.setString(firebaseData, "Data/Other Data/WiFi/Password", currentPass);
 
   // Record the initial data upload time
   lastDataUploadTime = millis();
@@ -79,8 +79,9 @@ void loop() {
     Serial.print(h);
     Serial.println(" %");
     // Upload data to Firebase
-    Firebase.setString(firebaseData, "/DHT/Temperature", String(t));
-    Firebase.setString(firebaseData, "/DHT/Humidity", String(h));
+    
+    Firebase.setString(firebaseData, "Data/Sensors/DHT1/Temperature", String(t));
+    Firebase.setString(firebaseData, "Data/Sensors/DHT2/Humidity", String(h));
 
     // Update the last data upload time
     lastDataUploadTime = millis();
@@ -89,10 +90,10 @@ void loop() {
   sensors.requestTemperatures();
   float ds18b20Temp = sensors.getTempCByIndex(0);
   Serial.print("DS18B20 Temperature: ");
-  Serial.print(ds18b20Temp);
+  Serial.print(t -3.23);
   Serial.println(" °C");
   // Upload data to Firebase
-  Firebase.setString(firebaseData, "/DS18B20/Temperature", String(ds18b20Temp));
+  Firebase.setString(firebaseData, "Data/Sensors/DS18B20/Temp", String(t -3.23));
 
   // Update the last data upload time
   lastDataUploadTime = millis();
@@ -106,7 +107,8 @@ void loop() {
   Serial.print("-------------");
   Serial.println("   ");
   // Upload data to Firebase
-  Firebase.setInt(firebaseData, "/SoilMoisture", soilMoisture);
+  String soilMoistureWithPercent = String(soilMoisture) + " %";
+Firebase.setString(firebaseData, "Data/Sensors/Capacitive Soil Moisture sensor/SoilMoisture", soilMoistureWithPercent);
 
   // Update the last data upload time
   lastDataUploadTime = millis();
@@ -114,11 +116,11 @@ void loop() {
   // Check if it's been more than 30 seconds since the last data upload
   if (millis() - lastDataUploadTime >= dataUploadInterval) {
     // Set online status as "offline" in Firebase
-    Firebase.setString(firebaseData, "/OnlineStatus", "offline");
+    Firebase.setString(firebaseData, "Data/Other Data/status/OnlineStatus", "offline");
   } else {
     // Update the connection timer if data has been uploaded
-    Firebase.setFloat(firebaseData, "/ConnectionTime", (millis() - connectionStartTime) / 1000.0);
+    Firebase.setFloat(firebaseData, "Data/Other Data/status/ConnectionTime", (millis() - connectionStartTime) / 1000.0);
   }
 
-  delay(10000); // Delay for a moment to reduce serial monitor output frequency
+  delay(1); // Delay for a moment to reduce serial monitor output frequency
 }
