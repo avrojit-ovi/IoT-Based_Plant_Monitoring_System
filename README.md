@@ -766,9 +766,9 @@ With the condition that:
 ### Connect with Developer
 
 - **GitHub**: [@avrojit-ovi](https://github.com/avrojit-ovi)
-- **Email**: [your-email@example.com]
-- **LinkedIn**: [Your LinkedIn Profile]
-- **Twitter**: [@your-twitter-handle]
+- **Email**: ovi.chy4041@gmail.com
+- **LinkedIn**: [Ovi Chowdhury](https://www.linkedin.com/in/ovichy/)
+
 
 ### Community
 
